@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import * as seed from './seed.js';
 
-const KEY = 'top-demo-v1';
+const KEY = 'top-demo-v2';
 export const DEMO_EMAIL = 'demo@theonepercent.app';
 export const DEMO_PASSWORD = 'OnePercent2026';
 

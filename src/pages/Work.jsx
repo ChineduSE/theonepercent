@@ -284,7 +284,11 @@ export default function Work() {
   const { state } = useStore();
   return (
     <div>
-      <PageHeader kicker={`${state.work.profile.title} · ${state.work.profile.company}`} title="Work" sub="Record what you do, connect it to your skills and goals, apply what you learn, and turn it into evidence when you need it." />
+      <PageHeader kicker={`${state.work.profile.title} · ${state.work.profile.company}`} title="My work" sub="Record what you do, connect it to your skills and goals, apply what you learn, and turn it into evidence when you need it." />
+      <div className="rounded-2xl bg-indigo text-ivory px-4 py-3 mb-4 flex flex-wrap items-center gap-3">
+        <span className="text-[14px] font-semibold flex-1 min-w-56"><span className="text-gold font-extrabold">{state.work.profile.reviewName}</span> in {Math.max(0, Math.round((new Date(state.work.profile.reviewDate) - new Date()) / 6048e5))} weeks · {state.work.stories.filter((x) => x.status === 'approved').length} stories approved · {state.work.log.filter((e) => e.result).length} wins with results</span>
+        <button onClick={() => setTab('documents')} className="btn-gold !min-h-9">Draft self-assessment</button>
+      </div>
       <div className="flex gap-1 p-1 rounded-xl bg-sand overflow-x-auto scroll-thin mb-5" role="tablist">
         {TABS.map(([v, l, Icon]) => <button key={v} role="tab" aria-selected={tab === v} onClick={() => setTab(v)} className={`flex items-center gap-2 whitespace-nowrap min-h-10 px-3.5 rounded-lg text-[14px] font-bold cursor-pointer ${tab === v ? 'bg-white shadow-sm' : 'text-muted hover:text-indigo'}`}><Icon size={16} />{l}</button>)}
       </div>

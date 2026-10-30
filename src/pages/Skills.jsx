@@ -42,6 +42,7 @@ export default function Skills() {
   const shown = (s) => {
     const st = skillStatus(state, s.id).status;
     if (filter === 'added') return s.addedByUser;
+    if (filter === 'work') return (state.evidence[s.id]?.work || 0) > 0;
     if (filter === 'all') return true;
     return st === filter;
   };
@@ -77,7 +78,7 @@ export default function Skills() {
       </div>
 
       <div className="flex flex-wrap items-center gap-2 mb-4">
-        {[['all', 'All'], ['demonstrated', 'Demonstrated'], ['developing', 'Developing'], ['none', 'Not covered'], ['added', 'Added by you']].map(([v, l]) => <button key={v} onClick={() => setFilter(v)} className={`pill !text-[13px] !py-2 !px-3.5 cursor-pointer border-[1.5px] ${filter === v ? 'bg-indigo text-ivory border-indigo' : 'bg-white border-line text-indigo'}`}>{l}</button>)}
+        {[['all', 'All'], ['demonstrated', 'Demonstrated'], ['developing', 'Developing'], ['none', 'Not covered'], ['work', 'Used at work'], ['added', 'Added by you']].map(([v, l]) => <button key={v} onClick={() => setFilter(v)} className={`pill !text-[13px] !py-2 !px-3.5 cursor-pointer border-[1.5px] ${filter === v ? 'bg-indigo text-ivory border-indigo' : 'bg-white border-line text-indigo'}`}>{l}</button>)}
         <button onClick={() => setAdding(true)} className="btn-ghost !min-h-9 ml-auto"><Plus size={16} />Add a skill</button>
       </div>
 

@@ -274,6 +274,8 @@ export const WORK_PROFILE = {
   team: 'Payments squad · 5 engineers, 1 designer',
   started: 'November 2025',
   previous: 'Customer support lead at a commercial bank (3 years)',
+  reviewName: 'Q4 performance review',
+  reviewDate: dayISO(42),
   jd: 'Own the onboarding and payment-success experience. Turn customer insight into prioritised improvements. Work with engineering and design to ship weekly. Report impact on activation and support volume.',
 };
 
@@ -285,7 +287,7 @@ export const KPIS = [
 
 const W = (id, daysAgo, text, skills, kpi, result, extra = {}) => ({ id, date: dayISO(-daysAgo, 18, 30), text, skills, kpi, result, ...extra });
 export const WORK_LOG = [
-  W('w1', 0, 'Ran sprint planning for the payments squad. Used RICE scores to cut the backlog from 14 items to 6; the team agreed in 30 minutes instead of the usual 2 hours.', ['prio-frameworks', 'sprint-planning'], null, 'Planning time cut from 2 hours to 30 minutes.', { project: 'Sprint 22', learnedLink: 'c-rice' }),
+  W('w1', 1, 'Ran sprint planning for the payments squad. Used RICE scores to cut the backlog from 14 items to 6; the team agreed in 30 minutes instead of the usual 2 hours.', ['prio-frameworks', 'sprint-planning'], null, 'Planning time cut from 2 hours to 30 minutes.', { project: 'Sprint 22', learnedLink: 'c-rice' }),
   W('w2', 1, 'Reviewed 300 failed-payment tickets from last month and grouped them into 6 causes. 41% were “debited but not credited” for electricity tokens.', ['research-synthesis'], 'k2', null, { followUp: 'What changed because of this analysis? For example, did it change what the team is fixing first?' }),
   W('w3', 2, 'Wrote the brief for clearer failed-payment messages: tell users when the money will be reversed and give a reference number.', ['product-briefs'], 'k2', 'Brief approved by engineering lead; build starts next sprint.'),
   W('w4', 4, 'Watched 6 users try the new onboarding flow. 4 of 6 stopped at the ID upload screen to look for their NIN slip.', ['usability-testing', 'problem-framing'], 'k1', '4 of 6 users hesitated at ID upload — confirmed the drop-off cause.', { learnedLink: 'c-5users' }),

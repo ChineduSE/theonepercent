@@ -48,6 +48,20 @@ export default function SkillDetail() {
         <p className="text-[15.5px] leading-relaxed text-muted">{s.desc}</p>
       </div>
 
+      <div><SectionLabel>Your journey with this skill</SectionLabel>
+        <div className="card p-4 grid grid-cols-3 gap-2">
+          {[['Learned', concepts.length ? relDay(concepts.map((c) => state.notes.find((n) => n.id === c.noteId)?.createdAt).filter(Boolean).sort()[0] || new Date().toISOString()) : 'Not yet', concepts.length ? `${concepts.length} concept${concepts.length > 1 ? 's' : ''} in your notes` : 'Add a note'],
+            ['Practised', `${concepts.reduce((a, c) => a + (c.asked || 0), 0)} times`, 'spaced over time'],
+            ['Used at work', work.length ? `${work.length} time${work.length > 1 ? 's' : ''}` : 'Not yet', work.length ? `last ${relDay(work[0].date).toLowerCase()}` : 'Log it when you do']].map(([k, v, sub], i) => (
+            <div key={k} className={`rounded-xl p-3 flex flex-col gap-0.5 ${i === 2 && work.length ? 'bg-gold-soft' : 'bg-ivory'}`}>
+              <span className="text-[11.5px] font-extrabold uppercase tracking-[0.06em] text-muted">{i + 1}. {k}</span>
+              <span className="text-[17px] font-extrabold">{v}</span>
+              <span className="text-[12px] text-muted">{sub}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div><SectionLabel>Your evidence</SectionLabel>
         <div className="card divide-y divide-line">
           {Object.entries(DIM_LABEL).map(([d, [l, sub]]) => (

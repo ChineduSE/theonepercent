@@ -18,7 +18,6 @@ const TEMPLATES = {
 const genericAreas = (r) => [[`Core ${r} knowledge`, 6], ['Tools and methods', 5], ['Planning and execution', 5], ['Data and measurement', 4], ['Communication with stakeholders', 4], ['Strategy and growth', 4]];
 
 const FAMILIARITY = ['New to it', 'I know the basics', 'Practising (under 1 year)', 'Experienced (1–3 years)', 'Advanced (3+ years)'];
-const SITUATION = ['Student', 'Switching careers', 'Working in this role', 'Other'];
 
 export default function Onboarding() {
   const nav = useNavigate();
@@ -31,9 +30,9 @@ export default function Onboarding() {
   const [role, setRole] = useState('');
   const [gen, setGen] = useState(0);
   const [fam, setFam] = useState('');
-  const [sit, setSit] = useState('');
-  const [prev, setPrev] = useState('');
   const [mode, setMode] = useState('twice');
+  const [work, setWork] = useState('');
+  const [job, setJob] = useState({ title: '', company: '', kpis: ['', '', ''] });
   const [captureMode, setCaptureMode] = useState('type');
   const [note, setNote] = useState('RICE = Reach × Impact × Confidence ÷ Effort. Use it to compare features fairly instead of going with the loudest voice.\n\nMoSCoW for release scope: must, should, could, won’t.\n\nEvery yes is a no to something else — opportunity cost.\n\nAlso: feed the sourdough starter on Saturday!');
   const [proc, setProc] = useState(-1);
@@ -77,8 +76,8 @@ export default function Onboarding() {
     <div className="min-h-screen bg-ivory flex flex-col">
       <div className="max-w-xl w-full mx-auto px-5 pt-5 flex items-center gap-3">
         <button onClick={() => (step > 1 ? setStep(step - 1) : nav('/access'))} className="btn-quiet !px-2" aria-label="Back"><ArrowLeft size={20} /></button>
-        <div className="flex-1 flex gap-1.5">{[1, 2, 3, 4].map((i) => <div key={i} className={`flex-1 h-1.5 rounded-full ${i <= step ? 'bg-gold' : 'bg-line'}`} />)}</div>
-        <span className="text-[13px] font-semibold text-muted">{Math.min(step, 4)} of 4</span>
+        <div className="flex-1 flex gap-1.5">{[1, 2, 3, 4, 5].map((i) => <div key={i} className={`flex-1 h-1.5 rounded-full ${i <= step ? 'bg-gold' : 'bg-line'}`} />)}</div>
+        <span className="text-[13px] font-semibold text-muted">{Math.min(step, 5)} of 5</span>
       </div>
       <div className="flex-1 max-w-xl w-full mx-auto px-5 py-8 fade-in" key={step}>
 
@@ -125,13 +124,34 @@ export default function Onboarding() {
             <h1 className="text-[28px] font-extrabold leading-tight">How familiar are you with {role}?</h1>
             <div className="flex flex-col gap-2">{FAMILIARITY.map((f) => <button key={f} onClick={() => setFam(f)} className={`text-left min-h-12 px-4 rounded-xl border-[1.5px] font-semibold cursor-pointer ${fam === f ? 'border-indigo bg-sand' : 'border-line bg-white hover:border-soft'}`}>{f}</button>)}</div>
             <p className="text-[13px] text-muted -mt-3">This only sets where questions start. Your skills are never marked as demonstrated until you show them.</p>
-            <div className="flex flex-col gap-2"><span className="label">What best describes you? (optional)</span><div className="flex flex-wrap gap-2">{SITUATION.map((s) => <button key={s} onClick={() => setSit(s)} className={`pill !text-[14px] !py-2 !px-4 cursor-pointer border-[1.5px] ${sit === s ? 'bg-indigo text-ivory border-indigo' : 'bg-white border-line text-indigo'}`}>{s}</button>)}</div></div>
-            {sit === 'Switching careers' && <label className="flex flex-col gap-1.5 fade-in"><span className="label">What do you do now? (optional)</span><input className="input" value={prev} onChange={(e) => setPrev(e.target.value)} placeholder="e.g. Customer support at a bank" /><span className="text-[13px] text-muted">We’ll use it to connect examples to the work you already know.</span></label>}
             <button disabled={!fam} onClick={() => setStep(3)} className="btn-primary !min-h-12">Continue</button>
           </div>
         )}
 
         {step === 3 && (
+          <div className="flex flex-col gap-5">
+            <div><h1 className="text-[28px] font-extrabold leading-tight">Are you working now?</h1><p className="mt-2 text-[15px] text-muted">Your work becomes evidence. We’ll link what you do to your skills, and suggest ways to use what you learn on the job.</p></div>
+            <div className="flex flex-col gap-2">{[['role', `Yes, as or close to a ${role}`], ['switch', `Yes, but I’m switching to ${role}`], ['none', 'Not working right now']].map(([v, l]) => <button key={v} onClick={() => setWork(v)} className={`text-left min-h-12 px-4 rounded-xl border-[1.5px] font-semibold cursor-pointer ${work === v ? 'border-indigo bg-sand' : 'border-line bg-white hover:border-soft'}`}>{l}</button>)}</div>
+            {work === 'role' && (
+              <div className="card p-4 flex flex-col gap-3 fade-in">
+                <div className="grid sm:grid-cols-2 gap-2"><input className="input" placeholder="Job title, e.g. Associate PM" value={job.title} onChange={(e) => setJob({ ...job, title: e.target.value })} /><input className="input" placeholder="Company" value={job.company} onChange={(e) => setJob({ ...job, company: e.target.value })} /></div>
+                <span className="label">Your goals or KPIs this quarter (optional)</span>
+                {[0, 1, 2].map((i) => <input key={i} className="input" placeholder={['e.g. Raise onboarding completion from 52% to 65%', 'e.g. Cut failed-payment tickets by 30%', 'Another goal'][i]} value={job.kpis[i]} onChange={(e) => { const k = [...job.kpis]; k[i] = e.target.value; setJob({ ...job, kpis: k }); }} />)}
+                <p className="text-[13px] text-muted">Private. Never shown on your portfolio or used to train AI. You can add your job description later.</p>
+              </div>
+            )}
+            {work === 'switch' && (
+              <div className="card p-4 flex flex-col gap-3 fade-in">
+                <input className="input" placeholder="What do you do now? e.g. Customer support lead at a bank" value={job.title} onChange={(e) => setJob({ ...job, title: e.target.value })} />
+                <p className="text-[14px] text-muted"><strong className="text-indigo">Your current job already counts.</strong> Log your work and we’ll map it to {role} skills as transferable evidence for interviews.</p>
+              </div>
+            )}
+            {work === 'none' && <p className="text-[14px] text-muted card p-4 fade-in">No problem. You’ll start with learning, projects and interviews. Turn on the work log any time from Settings.</p>}
+            <button disabled={!work} onClick={() => setStep(4)} className="btn-primary !min-h-12">Continue</button>
+          </div>
+        )}
+
+        {step === 4 && (
           <div className="flex flex-col gap-6">
             <div><h1 className="text-[28px] font-extrabold leading-tight">When should your practice be ready?</h1><p className="mt-2 text-[15px] text-muted">About five minutes each. Missed sessions never pile up.</p></div>
             <Segmented value={mode} onChange={setMode} options={[['twice', 'Twice a day'], ['once', 'Once a day']]} />
@@ -140,11 +160,11 @@ export default function Onboarding() {
               {mode === 'twice' && <label className="flex items-center justify-between px-4 py-3"><span className="flex items-center gap-2 font-semibold"><Moon size={18} />Evening</span><input type="time" defaultValue="19:30" className="input !w-auto !min-h-10" /></label>}
             </div>
             <p className="text-[13px] text-muted -mt-3">Time zone: Africa/Lagos (detected). Sessions must be at least 6 hours apart.</p>
-            <button onClick={() => setStep(4)} className="btn-primary !min-h-12">Continue</button>
+            <button onClick={() => setStep(5)} className="btn-primary !min-h-12">Continue</button>
           </div>
         )}
 
-        {step === 4 && proc === -1 && (
+        {step === 5 && proc === -1 && (
           <div className="flex flex-col gap-5">
             <div><h1 className="text-[28px] font-extrabold leading-tight">What did you learn recently?</h1><p className="mt-2 text-[15px] text-muted">Add one thing from a course, book or webinar. Your first practice is built from it in seconds.</p></div>
             <Segmented value={captureMode} onChange={setCaptureMode} options={[['type', 'Type a note'], ['upload', 'Upload a file'], ['check', 'Skill check']]} />
@@ -155,7 +175,7 @@ export default function Onboarding() {
           </div>
         )}
 
-        {step === 4 && proc >= 0 && proc < 5 && (
+        {step === 5 && proc >= 0 && proc < 5 && (
           <div className="card p-6 flex flex-col gap-4">
             <p className="font-extrabold text-[20px]">Reading your note</p>
             {['Reading your note', 'Finding concepts', `Linking to ${role} skills`, 'Writing your first questions'].map((t, i) => (
@@ -164,7 +184,7 @@ export default function Onboarding() {
           </div>
         )}
 
-        {step === 4 && proc === 5 && qi === 0 && pick === null && score === 0 && (
+        {step === 5 && proc === 5 && qi === 0 && pick === null && score === 0 && (
           <div className="flex flex-col gap-4 fade-in">
             <h1 className="text-[26px] font-extrabold">We found {found.filter((f) => f.scope !== 'out').length} concepts</h1>
             {found.map((c) => (
@@ -177,7 +197,7 @@ export default function Onboarding() {
           </div>
         )}
 
-        {step === 4 && proc === 5 && qi >= 1 && qi <= qs.length && (() => {
+        {step === 5 && proc === 5 && qi >= 1 && qi <= qs.length && (() => {
           const q = qs[qi - 1];
           return (
             <div className="flex flex-col gap-4 fade-in" key={qi}>
@@ -194,7 +214,7 @@ export default function Onboarding() {
           );
         })()}
 
-        {step === 4 && proc === 5 && qi > qs.length && qs.length > 0 && (
+        {step === 5 && proc === 5 && qi > qs.length && qs.length > 0 && (
           <div className="flex flex-col gap-5 fade-in">
             <div className="bg-indigo text-ivory rounded-2xl p-6 flex flex-col gap-2"><Mark variant="gold" className="h-10 self-start" /><p className="text-[24px] font-extrabold">First practice done · {score} of {qs.length}</p><p className="text-[14.5px] text-[#C9CBDA]">Your skill map just moved: Prioritisation frameworks is now Developing.</p></div>
             <div className="card p-5 flex flex-col gap-3">

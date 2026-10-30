@@ -1,21 +1,39 @@
 import { useState } from 'react';
 import { NavLink, Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
-import { Home, BookOpen, Zap, Briefcase, Mic, BarChart3, Building2, UserRound, Settings, Bell, MoreHorizontal, Shield, RotateCcw, ListChecks, X, CheckCircle2, Circle } from 'lucide-react';
+import { Home, BookOpen, Zap, Briefcase, Mic, BarChart3, UserRound, Settings, Bell, MoreHorizontal, Shield, RotateCcw, ListChecks, X, CheckCircle2, Circle, ClipboardList, Lightbulb, FileText } from 'lucide-react';
 import { useStore } from '../lib/store.jsx';
 import { Wordmark, Mark, Modal, relDay, fmtTime } from './ui.jsx';
 
-const NAV = [
-  { to: '/app', end: true, label: 'Home', icon: Home },
-  { to: '/app/practice', label: 'Practice', icon: Zap },
-  { to: '/app/library', label: 'Library', icon: BookOpen },
-  { to: '/app/projects', label: 'Projects', icon: Briefcase },
-  { to: '/app/interviews', label: 'Interviews', icon: Mic },
-  { to: '/app/skills', label: 'Skills gap', icon: BarChart3 },
-  { to: '/app/work', label: 'Work', icon: Building2, badge: 'New' },
-  { to: '/app/portfolio', label: 'Portfolio', icon: UserRound },
-  { to: '/app/settings', label: 'Settings', icon: Settings },
+const GROUPS = [
+  { title: null, items: [{ to: '/app', label: 'Today', icon: Home, match: (p) => p === '/app' }] },
+  { title: 'Learn', items: [
+    { to: '/app/practice', label: 'Practice', icon: Zap },
+    { to: '/app/library', label: 'Library', icon: BookOpen },
+  ] },
+  { title: 'Apply', items: [
+    { to: '/app/projects', label: 'Projects', icon: Briefcase },
+    { to: '/app/work', label: 'Work log', icon: ClipboardList, match: (p, t) => p === '/app/work' && (!t || ['log', 'goals', 'context'].includes(t)) },
+    { to: '/app/work?tab=apply', label: 'Apply at work', icon: Lightbulb, match: (p, t) => p === '/app/work' && t === 'apply' },
+  ] },
+  { title: 'Prove', items: [
+    { to: '/app/skills', label: 'Skills gap', icon: BarChart3 },
+    { to: '/app/interviews', label: 'Interviews', icon: Mic },
+    { to: '/app/work?tab=stories', label: 'Stories & documents', icon: FileText, match: (p, t) => p === '/app/work' && ['stories', 'documents'].includes(t) },
+    { to: '/app/portfolio', label: 'Portfolio', icon: UserRound },
+  ] },
 ];
-const MOBILE = ['/app', '/app/practice', '/app/library', '/app/work', '/app/skills'];
+const NAV = [...GROUPS.flatMap((g) => g.items), { to: '/app/settings', label: 'Settings', icon: Settings }];
+const MOBILE_BAR = [
+  { to: '/app', label: 'Today', icon: Home, match: (p) => p === '/app' },
+  { to: '/app/practice', label: 'Learn', icon: Zap, match: (p) => p.startsWith('/app/practice') || p.startsWith('/app/library') },
+  { to: '/app/work', label: 'Log', icon: ClipboardList, match: (p) => p.startsWith('/app/work') },
+  { to: '/app/skills', label: 'Skills', icon: BarChart3, match: (p) => p.startsWith('/app/skills') },
+];
+const MOBILE = MOBILE_BAR.map((m) => m.to);
+const isActive = (item, loc) => {
+  const tab = new URLSearchParams(loc.search).get('tab');
+  return item.match ? item.match(loc.pathname, tab) : loc.pathname.startsWith(item.to);
+};
 
 const TOUR = [
   ['Answer today’s practice session (and dispute a grade)', '/app/practice'],
@@ -47,11 +65,22 @@ export default function Shell() {
       {/* Desktop sidebar */}
       <aside className="hidden lg:flex flex-col w-64 shrink-0 bg-indigo text-ivory sticky top-0 h-screen p-4 gap-1">
         <Link to="/app" className="px-2 pt-2 pb-5"><Wordmark dark /></Link>
-        {NAV.map(({ to, end, label, icon: Icon, badge }) => (
-          <NavLink key={to} to={to} end={end} className={({ isActive }) => `flex items-center gap-3 min-h-11 px-3 rounded-xl text-[14.5px] font-semibold transition-colors ${isActive ? 'bg-indigo-2 text-ivory shadow-[inset_3px_0_0_#C5A253]' : 'text-[#C9CBDA] hover:bg-indigo-2 hover:text-ivory'}`}>
-            <Icon size={19} />{label}{badge && <span className="ml-auto text-[10.5px] font-extrabold px-2 py-0.5 rounded-full bg-gold text-indigo">{badge}</span>}
-          </NavLink>
-        ))}
+        <div className="flex flex-col gap-0.5 overflow-y-auto scroll-thin -mx-1 px-1">
+          {GROUPS.map((g) => (
+            <div key={g.title || 'top'} className="flex flex-col gap-0.5 mb-2">
+              {g.title && <span className="px-3 pt-2 pb-1 text-[11px] tracking-[0.14em] uppercase font-extrabold text-gold">{g.title}</span>}
+              {g.items.map((item) => {
+                const on = isActive(item, loc); const Icon = item.icon;
+                return (
+                  <Link key={item.to} to={item.to} aria-current={on ? 'page' : undefined} className={`flex items-center gap-3 min-h-10 px-3 rounded-xl text-[14.5px] font-semibold transition-colors ${on ? 'bg-indigo-2 text-ivory shadow-[inset_3px_0_0_#C5A253]' : 'text-[#C9CBDA] hover:bg-indigo-2 hover:text-ivory'}`}>
+                    <Icon size={18} />{item.label}
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
+          <NavLink to="/app/settings" className={({ isActive: a }) => `flex items-center gap-3 min-h-10 px-3 rounded-xl text-[14.5px] font-semibold ${a ? 'bg-indigo-2 text-ivory' : 'text-[#C9CBDA] hover:bg-indigo-2 hover:text-ivory'}`}><Settings size={18} />Settings</NavLink>
+        </div>
         <NavLink to="/app/admin" className={({ isActive }) => `flex items-center gap-3 min-h-11 px-3 rounded-xl text-[14px] font-semibold ${isActive ? 'bg-indigo-2 text-ivory' : 'text-[#9A9DB5] hover:bg-indigo-2 hover:text-ivory'}`}><Shield size={18} />Admin (founder)</NavLink>
         <div className="mt-auto flex flex-col gap-2 pt-4 border-t border-indigo-3">
           <button onClick={() => setTour(true)} className="flex items-center gap-2 min-h-11 px-3 rounded-xl bg-gold text-indigo font-bold text-[14px] cursor-pointer hover:bg-[#D4B46B]"><ListChecks size={18} />Things to try · {done.length}/{TOUR.length}</button>
@@ -98,11 +127,14 @@ export default function Shell() {
 
       {/* Mobile bottom nav */}
       <nav className="lg:hidden fixed bottom-0 inset-x-0 z-30 bg-white border-t border-line flex px-1 pb-[max(10px,env(safe-area-inset-bottom))] pt-1" aria-label="Main">
-        {NAV.filter((n) => MOBILE.includes(n.to)).map(({ to, end, label, icon: Icon }) => (
-          <NavLink key={to} to={to} end={end} className={({ isActive }) => `flex-1 flex flex-col items-center justify-center gap-0.5 min-h-13 text-[11px] font-semibold ${isActive ? 'text-indigo shadow-[inset_0_3px_0_#C5A253]' : 'text-muted'}`}>
-            <Icon size={21} />{label === 'Skills gap' ? 'Skills' : label}
-          </NavLink>
-        ))}
+        {MOBILE_BAR.map((item) => {
+          const on = isActive(item, loc); const Icon = item.icon;
+          return (
+            <Link key={item.to} to={item.to} aria-current={on ? 'page' : undefined} className={`flex-1 flex flex-col items-center justify-center gap-0.5 min-h-13 text-[11px] font-semibold ${on ? 'text-indigo shadow-[inset_0_3px_0_#C5A253]' : 'text-muted'}`}>
+              <Icon size={21} />{item.label}
+            </Link>
+          );
+        })}
         <button onClick={() => setMore(true)} className="flex-1 flex flex-col items-center justify-center gap-0.5 min-h-13 text-[11px] font-semibold text-muted cursor-pointer"><MoreHorizontal size={21} />More</button>
       </nav>
 
