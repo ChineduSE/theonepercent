@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Manrope", Arial, sans-serif;
+  --color-gold: #C5A253;
+  --color-gold-soft: #F3E7C8;
+  --color-gold-ink: #5A4410;
+  --color-indigo: #171B35;
+  --color-indigo-2: #262B52;
+  --color-indigo-3: #3A3F6B;
+  --color-ivory: #F6F2E9;
+  --color-sand: #ECE6DA;
+  --color-line: #E4DCCB;
+  --color-muted: #55586E;
+  --color-soft: #8A8DA3;
+  --color-ok: #2E6B4A;
+  --color-ok-soft: #E5F0E8;
+  --color-bad: #9B2C2C;
+  --color-bad-soft: #F7E4E1;
+}
+
+html, body, #root { min-height: 100%; }
+body {
+  margin: 0;
+  background: var(--color-ivory);
+  color: var(--color-indigo);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+* { -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 2.5px solid var(--color-gold); outline-offset: 2px; border-radius: 6px; }
+::selection { background: var(--color-gold-soft); }
+
+@utility card { @apply bg-white border border-line rounded-2xl; }
+@utility btn { @apply inline-flex items-center justify-center gap-2 min-h-11 px-4 rounded-xl font-bold text-[15px] transition-colors cursor-pointer select-none disabled:opacity-50 disabled:cursor-not-allowed; }
+@utility btn-primary { @apply btn bg-indigo text-ivory hover:bg-indigo-2; }
+@utility btn-gold { @apply btn bg-gold text-indigo hover:bg-[#D4B46B]; }
+@utility btn-ghost { @apply btn border-[1.5px] border-indigo text-indigo bg-transparent hover:bg-sand; }
+@utility btn-quiet { @apply btn text-indigo bg-transparent hover:bg-sand; }
+@utility btn-danger { @apply btn bg-bad text-white hover:bg-[#7f2424]; }
+@utility label { @apply text-[12px] tracking-[0.08em] uppercase font-bold text-muted; }
+@utility pill { @apply inline-flex items-center gap-1.5 text-[12px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap; }
+@utility input { @apply w-full min-h-11 px-3 rounded-xl border border-line bg-white text-[15px] text-indigo placeholder:text-soft outline-none focus:border-indigo; }
+@utility textarea { @apply w-full px-3 py-2.5 rounded-xl border border-line bg-white text-[15px] leading-relaxed text-indigo placeholder:text-soft outline-none focus:border-indigo resize-none; }
+@utility link { @apply font-bold underline underline-offset-2 hover:text-indigo-3 cursor-pointer; }
+
+.fade-in { animation: fadeIn .25s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.pulse-dot { animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+.wave span { animation: wave 1s ease-in-out infinite; }
+@keyframes wave { 0%,100% { transform: scaleY(.35); } 50% { transform: scaleY(1); } }
+.scroll-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+.scroll-thin::-webkit-scrollbar-thumb { background: #D9D2C2; border-radius: 6px; }
