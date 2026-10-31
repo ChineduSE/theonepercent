@@ -48,7 +48,7 @@ export default function Login() {
       <p className="mt-1 text-[15px] text-muted">Sign in to continue your practice.</p>
 
       <div className="mt-5 rounded-2xl bg-gold-soft text-gold-ink p-4 flex flex-col gap-2">
-        <span className="flex items-center gap-2 font-extrabold text-[14px]"><KeyRound size={16} />Demo account for judges</span>
+        <span className="flex items-center gap-2 font-extrabold text-[14px]"><KeyRound size={16} />Demo account</span>
         <span className="text-[14px]">Email: <strong>{DEMO_EMAIL}</strong></span>
         <span className="text-[14px]">Password: <strong>{DEMO_PASSWORD}</strong></span>
         <button onClick={fill} className="btn-primary !min-h-10 self-start mt-1">Fill demo login</button>

@@ -395,7 +395,7 @@ export const ADMIN = {
   invites: [
     { code: 'ALX-W1', label: 'ALX cohort · wave 1', used: 47, max: 50, active: true },
     { code: 'PM-COMMUNITY', label: 'Lagos PM community', used: 31, max: 40, active: true },
-    { code: 'PITCH-DEMO', label: 'Pitch judges', used: 3, max: 100, active: true },
+    { code: 'PITCH-DEMO', label: 'Demo access', used: 3, max: 100, active: true },
   ],
   requests: [
     { name: 'Ifeoma N.', role: 'Data Analyst', source: 'LinkedIn', date: dayISO(-1) },

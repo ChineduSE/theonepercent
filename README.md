@@ -13,9 +13,9 @@ A working, clickable prototype of The One Percent: learning retention, skill evi
 | Invite code (to try sign-up and onboarding) | `PITCH-DEMO` |
 | 6-digit email code (alternative sign-in) | `482913` |
 
-The landing page and sign-in screen both show these details, with a one-click "Fill demo login" button. **Reset demo data** (sidebar, or Settings) restores everything to the start, so each judge sees the same story.
+The landing page and sign-in screen both show these details, with a one-click "Fill demo login" button. **Reset demo data** (sidebar, or Settings) restores everything to the start, so everyone sees the same story.
 
-## What judges can do
+## What you can do
 
 1. **Practise:** answer today's session (multiple choice, select-all, short answer with criteria, scenarios), see the source note, and dispute a grade.
 2. **Capture:** add a note and watch concepts get extracted, linked to skills, flagged out of scope, or suggested as new skills. Then practise them instantly.
